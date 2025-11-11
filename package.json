@@ -1,12 +1,13 @@
 {
   "name": "google-sheet-sync",
   "version": "1.0.0",
-  "description": "Sync WhatsApp leads to Google Sheets",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "googleapis": "^126.0.1"
+    "googleapis": "^126.0.1",
+    "axios": "^1.7.7"
   }
 }
