@@ -13,7 +13,7 @@ async function run() {
   const now = new Date().toISOString();
   await sheets.spreadsheets.values.append({
     spreadsheetId: SPREADSHEET_ID,
-    range: 'Sheet1!A:C',
+    range: 'الورقة1!A:G',
     valueInputOption: 'USER_ENTERED',
     requestBody: { values: [[now, 'GitHub Actions run', 'WhatsApp Sync']] },
   });
