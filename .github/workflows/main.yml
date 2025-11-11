@@ -3,7 +3,7 @@ name: Sync WhatsApp leads to Google Sheets
 on:
   workflow_dispatch: {}        # تشغيل يدوي من الزر Run Workflow
   schedule:
-    - cron: "0 * * * *"        # تشغيل تلقائي كل ساعة (بتوقيت UTC)
+- cron: "0 5 * * *"
 
 concurrency:
   group: google-sheet-sync
