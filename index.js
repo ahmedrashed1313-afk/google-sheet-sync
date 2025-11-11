@@ -48,3 +48,10 @@ app.post("/whatsapp", async (req, res) => {
 // تشغيل السيرفر
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 السيرفر شغال على البورت ${PORT}`));
+// Run locally or skip server in CI
+if (process.env.GITHUB_ACTIONS !== 'true') {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+} else {
+  console.log("Running in GitHub Actions environment — no server started.");
+}
