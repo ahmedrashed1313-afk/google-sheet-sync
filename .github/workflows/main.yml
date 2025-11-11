@@ -1,10 +1,10 @@
 name: Sync WhatsApp leads to Google Sheets
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch: {}            # تشغيل يدوي من الزر
   schedule:
-    - cron: "0 5 * * *"      # 9am UAE
-    - cron: "0 14 * * *"     # 6pm UAE
+    - cron: "0 5 * * *"           # 9 صباحًا بتوقيت الإمارات
+    - cron: "0 14 * * *"          # 6 مساءً بتوقيت الإمارات
 
 concurrency:
   group: google-sheet-sync
@@ -14,6 +14,7 @@ jobs:
   run-sync:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -21,11 +22,10 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
-          cache: 'npm'
+          node-version: '20.x'     # من غير cache هنا
 
       - name: Install dependencies
-  run: npm install
+        run: npm install
 
       - name: Run Google Sheets Sync
         env:
