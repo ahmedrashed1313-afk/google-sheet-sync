@@ -1,13 +1,33 @@
-import express from "express";
-import bodyParser from "body-parser";
-import dotenv from "dotenv";
-import { google } from "googleapis";
-import fs from "fs";
+import { google } from 'googleapis';
 
-dotenv.config();
-const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+const creds = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+const auth = new google.auth.GoogleAuth({
+  credentials: creds,
+  scopes: ['https://www.googleapis.com/auth/spreadsheets']
+});
+const sheets = google.sheets({ version: 'v4', auth });
+
+const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
+
+async function run() {
+  const now = new Date().toISOString();
+  await sheets.spreadsheets.values.append({
+    spreadsheetId: SPREADSHEET_ID,
+    range: 'Sheet1!A:G',
+    valueInputOption: 'USER_ENTERED',
+    requestBody: {
+      values: [[now, 'GitHub Actions run', 'WhatsApp lead', '', '', '', '']]
+    }
+  });
+  console.log('✅ Row appended to Google Sheets');
+}
+
+run()
+  .then(() => process.exit(0))
+  .catch(err => {
+    console.error(err);
+    process.exit(1);
+  });
 
 // إعداد Google Sheets
 const auth = new google.auth.GoogleAuth({
