@@ -1,77 +1,34 @@
+// index.js  (one-shot)
 import { google } from 'googleapis';
 
 const creds = JSON.parse(process.env.GOOGLE_CREDENTIALS);
+
 const auth = new google.auth.GoogleAuth({
   credentials: creds,
-  scopes: ['https://www.googleapis.com/auth/spreadsheets']
+  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
 });
-const sheets = google.sheets({ version: 'v4', auth });
 
+const sheets = google.sheets({ version: 'v4', auth });
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 
 async function run() {
   const now = new Date().toISOString();
+
   await sheets.spreadsheets.values.append({
     spreadsheetId: SPREADSHEET_ID,
-    range: 'Sheet1!A:G',
+    range: 'Sheet1!A:C',              // عدّل الرينچ حسب أعمدتك
     valueInputOption: 'USER_ENTERED',
     requestBody: {
-      values: [[now, 'GitHub Actions run', 'WhatsApp lead', '', '', '', '']]
-    }
+      values: [[now, 'GitHub Actions run', 'WhatsApp Sync']],
+    },
   });
+
   console.log('✅ Row appended to Google Sheets');
 }
 
 run()
   .then(() => process.exit(0))
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
     process.exit(1);
   });
-
-// إعداد Google Sheets
-const auth = new google.auth.GoogleAuth({
-  keyFile: "credentials.json",
-  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-});
-
-const sheets = google.sheets({ version: "v4", auth });
-
-// معرف الشيت (Spreadsheet ID)
-const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
-
-// استقبال الرسائل من Twilio WhatsApp Webhook
-app.post("/whatsapp", async (req, res) => {
-  const { Body, From } = req.body;
-  console.log(`📩 رسالة جديدة من ${From}: ${Body}`);
-
-  // تسجيل الرسالة في Google Sheet
-  try {
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: SPREADSHEET_ID,
-      range: "Sheet1!A:C",
-      valueInputOption: "RAW",
-      requestBody: {
-        values: [[new Date().toLocaleString(), From, Body]],
-      },
-    });
-    console.log("✅ تم حفظ الرسالة في Google Sheet");
-  } catch (error) {
-    console.error("❌ خطأ أثناء الكتابة في Google Sheet:", error);
-  }
-
-  // رد تلقائي للعميل
-  res.set("Content-Type", "text/plain");
-  res.send("📞 شكرًا لتواصلك! تم استلام رسالتك وسنعاود الاتصال قريبًا.");
-});
-
-// تشغيل السيرفر
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 السيرفر شغال على البورت ${PORT}`));
-// Run locally or skip server in CI
-if (process.env.GITHUB_ACTIONS !== 'true') {
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-} else {
-  console.log("Running in GitHub Actions environment — no server started.");
-}
